@@ -4,14 +4,16 @@ import './App.css';
 import Navbar from './components/layout/Navbar';
 import Search from './components/users/Search';
 import Users from './components/users/Users';
+import Alert from './components/layout/Alert';
 
 class App extends Component {
   state = {
     users: [],
     loading: false,
+    alert: null,
   };
   async componentDidMount() {
-    this.setState({ loading: true });
+    this.setState({ loading: true, alert: null });
     const response = await Axios.get(
       `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
@@ -19,7 +21,7 @@ class App extends Component {
   }
 
   searchUsers = async (inputText) => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, alert: null });
     const response = await Axios.get(
       `https://api.github.com/search/users?q=${inputText}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
@@ -28,16 +30,23 @@ class App extends Component {
 
   clearUsers = () => this.setState({ users: [], loading: false });
 
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg, type } });
+    setTimeout(() => this.setState({ alert: null }), 5000);
+  };
+
   render() {
     const { loading, users } = this.state;
     return (
       <Fragment>
         <Navbar />
         <div className='container'>
+          <Alert alert={this.state.alert} />
           <Search
             searchUsers={this.searchUsers}
             clearUsers={this.clearUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert}
           />
           <Users loading={loading} users={this.state.users} />
         </div>
