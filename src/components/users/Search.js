@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Search extends Component {
   state = {
@@ -9,6 +10,8 @@ class Search extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
+    this.props.searchUsers(this.state.inputText);
+    this.setState({ inputText: '' });
   };
   render() {
     return (
@@ -31,6 +34,9 @@ class Search extends Component {
       </div>
     );
   }
+  static propTypes = {
+    searchUsers: PropTypes.func.isRequired,
+  };
 }
 
 export default Search;
