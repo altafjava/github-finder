@@ -25,13 +25,21 @@ class App extends Component {
     );
     this.setState({ loading: false, users: response.data.items });
   };
+
+  clearUsers = () => this.setState({ users: [], loading: false });
+
   render() {
+    const { loading, users } = this.state;
     return (
       <Fragment>
         <Navbar />
         <div className='container'>
-          <Search searchUsers={this.searchUsers} />
-          <Users loading={this.state.loading} users={this.state.users} />
+          <Search
+            searchUsers={this.searchUsers}
+            clearUsers={this.clearUsers}
+            showClear={users.length > 0 ? true : false}
+          />
+          <Users loading={loading} users={this.state.users} />
         </div>
       </Fragment>
     );
