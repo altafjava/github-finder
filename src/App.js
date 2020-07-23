@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Alert from './components/layout/Alert';
@@ -7,11 +7,10 @@ import About from './components/pages/About';
 import Search from './components/users/Search';
 import User from './components/users/User';
 import Users from './components/users/Users';
+import AlertState from './context/alert/AlertState';
 import GithubState from './context/github/GithubState';
 
 const App = () => {
-  const [alert, setAlert] = useState(null);
-
   // useEffect(() => {
   //   async function fetchUsers() {
   //     const response = await Axios.get(
@@ -22,35 +21,32 @@ const App = () => {
   //   fetchUsers();
   // }, []);
 
-  const showAlert = (msg, type) => {
-    setAlert({ msg, type });
-    setTimeout(() => setAlert({ msg, type }), 5000);
-  };
-
   return (
     <GithubState>
-      <BrowserRouter>
-        <Fragment>
-          <Navbar />
-          <div className='container'>
-            <Alert alert={alert} />
-            <Switch>
-              <Route
-                exact
-                path='/'
-                render={() => (
-                  <Fragment>
-                    <Search showAlert={showAlert} />
-                    <Users />
-                  </Fragment>
-                )}
-              />
-              <Route exact path='/about' component={About} />
-              <Route exact path='/user/:login' component={User} />
-            </Switch>
-          </div>
-        </Fragment>
-      </BrowserRouter>
+      <AlertState>
+        <BrowserRouter>
+          <Fragment>
+            <Navbar />
+            <div className='container'>
+              <Alert />
+              <Switch>
+                <Route
+                  exact
+                  path='/'
+                  render={() => (
+                    <Fragment>
+                      <Search />
+                      <Users />
+                    </Fragment>
+                  )}
+                />
+                <Route exact path='/about' component={About} />
+                <Route exact path='/user/:login' component={User} />
+              </Switch>
+            </div>
+          </Fragment>
+        </BrowserRouter>
+      </AlertState>
     </GithubState>
   );
 };
