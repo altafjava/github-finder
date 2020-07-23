@@ -1,5 +1,4 @@
-import Axios from 'axios';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Alert from './components/layout/Alert';
@@ -11,8 +10,6 @@ import Users from './components/users/Users';
 import GithubState from './context/github/GithubState';
 
 const App = () => {
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
 
   // useEffect(() => {
@@ -30,15 +27,6 @@ const App = () => {
     setTimeout(() => setAlert({ msg, type }), 5000);
   };
 
-  const getUserRepos = async (username) => {
-    setLoading(true);
-    setAlert(null);
-    const response = await Axios.get(
-      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    setLoading(false);
-    setRepos(response.data);
-  };
   return (
     <GithubState>
       <BrowserRouter>
@@ -52,23 +40,13 @@ const App = () => {
                 path='/'
                 render={() => (
                   <Fragment>
-                    <Search
-                      // clearUsers={clearUsers}
-                      // showClear={users.length > 0 ? true : false}
-                      showAlert={showAlert}
-                    />
+                    <Search showAlert={showAlert} />
                     <Users />
                   </Fragment>
                 )}
               />
               <Route exact path='/about' component={About} />
-              <Route
-                exact
-                path='/user/:login'
-                render={(props) => (
-                  <User {...props} getUserRepos={getUserRepos} repos={repos} />
-                )}
-              />
+              <Route exact path='/user/:login' component={User} />
             </Switch>
           </div>
         </Fragment>
