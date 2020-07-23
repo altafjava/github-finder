@@ -11,6 +11,7 @@ const Search = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    alertContext.removeAlert();
     if (inputText === '') {
       alertContext.showAlert('Please enter something', 'warning');
     } else {

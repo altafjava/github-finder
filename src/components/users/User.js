@@ -11,6 +11,7 @@ const User = ({ match }) => {
   useEffect(() => {
     getUser(match.params.login);
     getUserRepos(match.params.login);
+    // Mandatory comment to avoid warning in console [ React Hook useEffect has missing dependencies: 'getUser', 'getUserRepos', and 'match.params.login'. Either include them or remove the dependency array  react-hooks/exhaustive-deps]
     // eslint-disable-next-line
   }, []);
 
